@@ -16,13 +16,17 @@ file.close()
 file = open("csvfilename",'r')
 
 if header_in_csv:
+   headerline = file.readline()
+   headers = headerline.split(',')
+
+for head in headers:
+    print("##" + head + "##")
     
-
-
 for line in file:
-     print(line)
+    line = line.rstrip()
+    print(line)
 
-
+file.close()
 
 #for line in content:
 #    print(line)
