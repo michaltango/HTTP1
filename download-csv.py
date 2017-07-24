@@ -5,9 +5,14 @@ header_in_csv = True
 position = list()
 csvfilename = url.split('/')[-1] + ".csv"
 response = urllib.request.urlopen(url)
+print(response.info())
+csvfile_size = response.getheader("Content-Length")
+print(csvfile_size)
+csvfile_buffer = int(csvfile_size) % 10 + 1
+
 
 file = open("csvfilename",'wb')
-content = response.read()
+content = response.read(csvfile_buffer)
 file.write(content)
 
 file.close()
