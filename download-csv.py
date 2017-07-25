@@ -1,11 +1,26 @@
 import urllib.request
 from urllib.error import URLError, HTTPError
-import csv, os.path
+import csv, os.path, socket
 url = "http://172.16.3.1:8080/file1.csv"
 header_in_csv = True
 
 
 #Download file from given url and save to current directory 
+
+def is_valid_ipv4_address(address):
+    try:
+        socket.inet_pton(socket.AF_INET, address)
+    except AttributeError:  # no inet_pton here, sorry
+        try:
+            socket.inet_aton(address)
+        except socket.error:
+            return False
+        return address.count('.') == 3
+    except socket.error:  # not a valid address
+        return False
+
+    return True
+
 def download_csv(url):
     position = list()
     csvfilename = url.split('/')[-1]
@@ -43,18 +58,24 @@ def download_csv(url):
     return csvfile_size
 
 def displaycsv(filename):
-
+    print("\nDevices:")
     with open(filename,mode='r') as csvfile:
         file = csv.DictReader(csvfile)
 
         for row in file:
-            ipaddr = row['IP']
-            name = row['name']
             port = row['port']
-            print(ipaddr)
+            name = row['name']
+            ipaddr = row['IP']
+            if port.isdigit() and is_valid_ipv4_address(ipaddr):
+                
+                port = int(port)
+                print(name + " " + ipaddr + ":" + repr(port))
+            else:
+                print(name + ": Wrong data type")
+            
     return 1
 
-print(download_csv(url))
+download_csv(url)
 print(displaycsv("file1.csv"))
 
 #for line in content:
