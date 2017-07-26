@@ -1,7 +1,7 @@
 import urllib.request
 from urllib.error import URLError, HTTPError
 import csv, os.path, socket
-url = "http://172.16.3.1:8080/file1.csv"
+url = "http://192.168.100.20:8080/file1.csv"
 header_in_csv = True
 
 
