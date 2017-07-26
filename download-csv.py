@@ -64,7 +64,7 @@ def displaycsv(filename):
         file = csv.DictReader(csvfile)
         #Open inventory file when we write
         with open('inventory', 'w') as invfile:
-                    
+            invfile.write("[routers]\n")
             for row in file:    
 
                 port = row['port']
