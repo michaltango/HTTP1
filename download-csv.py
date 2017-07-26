@@ -71,9 +71,12 @@ def displaycsv(filename):
                 name = row['name']
                 ipaddr = row['IP']
                 if port.isdigit() and is_valid_ipv4_address(ipaddr):
-                    
+
+                    print(name + ": Saved to invetory")
+                    name.replace(" ","")
                     port = int(port)
-                    invfile.write(name + " " + ipaddr + ":" + repr(port) + "\n")
+                    
+                    invfile.write(name + " " + "ansible_host=" + ipaddr + " " + "ansible_port=" + repr(port) + "\n")
                 else:
                     print(name + ": Wrong data type")
                 
