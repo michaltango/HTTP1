@@ -59,20 +59,24 @@ def download_csv(url):
 
 def displaycsv(filename):
     print("\nDevices:")
+    #Open CSV file - Source
     with open(filename,mode='r') as csvfile:
         file = csv.DictReader(csvfile)
+        #Open inventory file when we write
+        with open('inventory', 'w') as invfile:
+                    
+            for row in file:    
 
-        for row in file:
-            port = row['port']
-            name = row['name']
-            ipaddr = row['IP']
-            if port.isdigit() and is_valid_ipv4_address(ipaddr):
+                port = row['port']
+                name = row['name']
+                ipaddr = row['IP']
+                if port.isdigit() and is_valid_ipv4_address(ipaddr):
+                    
+                    port = int(port)
+                    invfile.write(name + " " + ipaddr + ":" + repr(port) + "\n")
+                else:
+                    print(name + ": Wrong data type")
                 
-                port = int(port)
-                print(name + " " + ipaddr + ":" + repr(port))
-            else:
-                print(name + ": Wrong data type")
-            
     return 1
 
 download_csv(url)
