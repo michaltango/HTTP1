@@ -1,0 +1,13 @@
+---
+- hosts: routers
+  remote_user: admin
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: run show version on remote devices
+      ios_command:
+        commands: show version
+      register: showver
+    - name: save results to file
+      local_action: copy content={{ item }} dest=/tmp/{{ inventory_hostname }}
+      with_items: "{{ showver.stdout }}"
