@@ -4,10 +4,26 @@
   gather_facts: no
   connection: local
   tasks:
-    - name: run show version on remote devices
+#    - name: run show version on remote devices
+#      ios_command:
+#        commands: show version
+#      register: showver
+#    - name: save results to file
+#      local_action: copy content={{ item }} dest=/tmp/showver{{ inventory_hostname }}
+#      with_items: "{{ showver.stdout }}"
+    - name: run show running config on remote devices
       ios_command:
-        commands: show version
-      register: showver
+        commands: show running-config
+      register: showrun
     - name: save results to file
-      local_action: copy content={{ item }} dest=/tmp/{{ inventory_hostname }}
-      with_items: "{{ showver.stdout }}"
+      local_action: copy content={{ item }} dest=/tmp/showrun{{ inventory_hostname }}
+      with_items: "{{ showrun.stdout }}"
+    - name: get facts
+      ios_facts:
+        gather_subset: all
+      register: facts
+    - name: display facts
+      local_action: shell python3 save-csv.py {{ facts.ansible_facts.ansible_net_serialnum }}
+#      debug: msg="{{ facts.ansible_facts.ansible_net_serialnum }}"
+   
+
