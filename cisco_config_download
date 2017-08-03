@@ -11,19 +11,31 @@
 #    - name: save results to file
 #      local_action: copy content={{ item }} dest=/tmp/showver{{ inventory_hostname }}
 #      with_items: "{{ showver.stdout }}"
+
+#Run show running-config command on remote device and save to variable
     - name: run show running config on remote devices
       ios_command:
         commands: show running-config
       register: showrun
+
+#Create directory for congiguration to be saved to
+    - name: create directory structure
+      local_action: file path=/tmp/routerconfigs/{{ inventory_hostname }} state=directory
+
+#save results to directory with file name
     - name: save results to file
-      local_action: copy content={{ item }} dest=/tmp/showrun{{ inventory_hostname }}
+      local_action: copy content={{ item }} dest=/tmp/routerconfigs/{{ inventory_hostname }}/show_running-config.txt
       with_items: "{{ showrun.stdout }}"
+
+#get facts from remote device and diesplay
     - name: get facts
       ios_facts:
         gather_subset: all
       register: facts
-    - name: display facts
+
+#export collected facts back to csv
+    - name: Save facts
       local_action: shell python3 save-csv.py {{ facts.ansible_facts.ansible_net_serialnum }}
 #      debug: msg="{{ facts.ansible_facts.ansible_net_serialnum }}"
-   
+       
 
