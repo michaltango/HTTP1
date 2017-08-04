@@ -62,10 +62,13 @@ def displaycsv(filename):
     #Open CSV file - Source
     with open(filename,mode='r') as csvfile:
         file = csv.DictReader(csvfile)
+        header = file.fieldnames
+        print(header)
         #Open inventory file when we write
         with open('inventory', 'w') as invfile:
+
             invfile.write("[routers]\n")
-            for row in file:    
+            for row in file:
 
                 port = row['port']
                 name = row['name']
@@ -75,11 +78,11 @@ def displaycsv(filename):
                     print(name + ": Saved to invetory")
                     name.replace(" ","")
                     port = int(port)
-                    
+
                     invfile.write(name + " " + "ansible_host=" + ipaddr + " " + "ansible_port=" + repr(port) + "\n")
                 else:
                     print(name + ": Wrong data type")
-                
+
     return 1
 
 download_csv(url)

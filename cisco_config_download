@@ -11,7 +11,7 @@
 #    - name: save results to file
 #      local_action: copy content={{ item }} dest=/tmp/showver{{ inventory_hostname }}
 #      with_items: "{{ showver.stdout }}"
-
+#
 #Run show running-config command on remote device and save to variable
     - name: run show running config on remote devices
       ios_command:
