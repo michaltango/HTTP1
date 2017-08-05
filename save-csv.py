@@ -21,32 +21,44 @@ def displaycsv(filename):
 	
 def updatecsv(routername,details):
     #Open CSV file - Source
-	with open('file1.csv', 'r') as csvfile, open('outputfile.csv', 'w') as output:
+	#os.remove('outputfile.csv')
+	with open('file1.csv', 'r') as csvfile, open('outputfile.csv', 'w+') as output:
 		reader = csv.DictReader(csvfile)
-		#writer = csv.DictWriter(output)
 		header = reader.fieldnames
-		type = "dasdas"
 		
-		for sysarg in range(2,len(sys.argv)):
-			print(sysarg)
-			uppdatefield = sys.argv[sysarg]
-			updatevalue = sys.argv[sysarg].split()
+		#Extract argument lists from command line and save to dictionary
+		updatefield = {}
+		for sysarg in range(3,len(sys.argv)):
+			argument = sys.argv[sysarg].split(":")
+			updatefield[argument[0]] = argument[1]
 			sysarg = sysarg + 1
 			
+		
+		#Append new fields to a header list 
+		for field, value in updatefield.items():
+			if  field not in header:
+				header.append(field)
 			
-		if type in header:
-			print(type)
-		else:
-			header.append(type)
+
+			
+				#Save new file to a temp location
+		writer = csv.DictWriter(output,fieldnames=header)
+		writer.writeheader()
 		
 		
-		#for row in reader:
-		#	if row[name] == routername:
+		#Iterate through CSV file and update router row
+		for row in reader:
+			if row["name"] == routername:
+				for head in header: 
+					if head != "name" and head in updatefield.keys():
+						row[head] = updatefield[head]
+			print(row)
+						
 		#		for head in header:
 				
 					
 		
-		print(header)
+#		print(header)
 	return 1
 
 if len(sys.argv) > 1:
@@ -54,8 +66,8 @@ if len(sys.argv) > 1:
 	if action == "show":
 		displaycsv("file1.csv")
 	elif action == "update":
-		updatecsv("das","dsadsa")
+		updatecsv(sys.argv[2],"dsadsa")
 	else:
-		print("Usage: " + sys.argv[0] + " [show|update]")
+		print("Usage: " + sys.argv[0] + " [show|update] routername argument:value")
 else:
-	print("Usage: " + sys.argv[0] + " [show|update]")
+	print("Usage: " + sys.argv[0] + " [show|update] routername argument:value")
