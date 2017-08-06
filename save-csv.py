@@ -53,6 +53,12 @@ def updatecsv(routername,details):
 					if head != "name" and head in updatefield.keys():
 						row[head] = updatefield[head]
 			print(row)
+			writer.writerow(row)
+		
+	output.close()
+	csvfile.close()
+	os.remove('file1.csv')
+	os.rename('outputfile.csv','file1.csv')
 						
 		#		for head in header:
 				

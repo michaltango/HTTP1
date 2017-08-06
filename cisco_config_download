@@ -26,6 +26,9 @@
     - name: save results to file
       local_action: copy content={{ item }} dest=/tmp/routerconfigs/{{ inventory_hostname }}/show_running-config.txt
       with_items: "{{ showrun.stdout }}"
+#Git push to repo
+    - name: Push configs to repository
+      local_action: shell /home/michal/projects/HTTP1/HTTP1/upload.sh
 
 #get facts from remote device and diesplay
     - name: get facts
@@ -35,7 +38,7 @@
 
 #export collected facts back to csv
     - name: Save facts
-      local_action: shell python3 save-csv.py {{ facts.ansible_facts.ansible_net_serialnum }}
+      local_action: shell python3 save-csv.py update {{ inventory_hostname }} SN:{{ facts.ansible_facts.ansible_net_serialnum }} Model:{{ facts.ansible_facts.ansible_net_model }} hostname:{{ facts.ansible_facts.ansible_net_hostname }} 
 #      debug: msg="{{ facts.ansible_facts.ansible_net_serialnum }}"
        
 
